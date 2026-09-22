@@ -27,13 +27,7 @@ def main_menu():
                     text="📋 Мои заказы",
                     callback_data="my_orders"
                 )
-            ],
-            [
-                InlineKeyboardButton(
-                    text="☎️ Связаться с менеджером",
-                    callback_data="manager"
-                )
-            ],
+            ]
         ]
     )
 
@@ -88,8 +82,7 @@ def main_reply_keyboard():
                 KeyboardButton(text="💰 Узнать стоимость"),
             ],
             [
-                KeyboardButton(text="📋 Мои заказы"),
-                KeyboardButton(text="☎️ Менеджер"),
+                KeyboardButton(text="📋 Мои заказы")
             ],
             [
                 KeyboardButton(
