@@ -111,8 +111,8 @@ async def show_review(message, index: int):
     photo_path = REVIEWS_DIR / review["photo"]
 
     text = (
-        f"⭐⭐⭐⭐⭐"
         f"Отзыв {index + 1} из {len(reviews)}\n\n"
+        f"⭐⭐⭐⭐⭐\n"
         f"{review['text']}\n\n"
         f"— {review['author']}"
     )
