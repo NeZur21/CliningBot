@@ -95,11 +95,29 @@ def main_reply_keyboard():
                 KeyboardButton(
                     text="⭐ Отзывы клиентов",
                 )
-            ],
-            [
-                KeyboardButton(text="🏠 Главное меню"),
-            ],
+            ]
         ],
         resize_keyboard=True,
         is_persistent=True
+    )
+
+def reviews_keyboard(index: int, total: int):
+    buttons = []
+
+    if index < total - 1:
+        buttons.append(
+            InlineKeyboardButton(
+                text="Ещё ➡️",
+                callback_data=f"review_next:{index + 1}"
+            )
+        )
+    else:
+        buttons.append(
+            InlineKeyboardButton(
+                text="🔄 Сначала",
+                callback_data="review_next:0"
+            )
+        )
+    return InlineKeyboardMarkup(
+        inline_keyboard=[buttons]
     )

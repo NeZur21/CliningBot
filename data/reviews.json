@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "photo": "Gemini_Generated_Image_nzeylknzeylknzey.jpg",
+        "text": "Очень довольны уборкой! Всё аккуратно и быстро.",
+        "author": "Анна"
+    },
+    {
+        "id": 2,
+        "photo": "Gemini_Generated_Image_nzeylknzeylknzey.jpg",
+        "text": "Заказывали генеральную уборку после ремонта. Результат отличный!",
+        "author": "Михаил"
+    },
+    {
+        "id": 3,
+        "photo": "Gemini_Generated_Image_nzeylknzeylknzey.jpg",
+        "text": "Приехали вовремя, всё сделали качественно. Будем обращаться ещё.",
+        "author": "Екатерина"
+    }
+]

@@ -1,8 +1,10 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, Message
 
-from bot.keyboards.main import main_menu, service_menu
-
+from bot.keyboards.main import main_menu, service_menu, reviews_keyboard
+import json
+from pathlib import Path
+from aiogram.types import FSInputFile
 
 router = Router()
 
@@ -70,45 +72,51 @@ async def manager_message(message: Message):
         "Напишите ваш вопрос следующим сообщением."
     )
 
-
-@router.message(F.text == "🏠 Главное меню")
-async def main_menu_message(message: Message):
-    await message.answer(
-        "🏠 Главное меню:",
-        reply_markup=main_menu()
-    )
-
+@router.message(F.text == "⭐ Отзывы клиентов")
+async def reviews_message(message: Message):
+    await show_review(message, 0)
 
 @router.callback_query(F.data == "reviews")
 async def reviews_callback(callback: CallbackQuery):
+    await show_review(callback.message, 0)
+    await callback.answer()
 
-    await callback.message.answer(
-        "⭐ Отзывы наших клиентов\n\n"
-        "«Очень довольны уборкой! Всё аккуратно и быстро.»\n"
-        "— Анна, Москва\n\n"
-        "«Заказывали генеральную уборку после ремонта. "
-        "Результат отличный!»\n"
-        "— Михаил, Москва\n\n"
-        "«Приехали вовремя, всё сделали качественно. "
-        "Будем обращаться ещё.»\n"
-        "— Екатерина, Москва",
-        reply_markup=main_menu()
-    )
+@router.callback_query(F.data.startswith("review_next:"))
+async def next_review(callback: CallbackQuery):
+    index = int(callback.data.split(":")[1])
+
+    await show_review(callback.message, index)
 
     await callback.answer()
 
-@router.message(F.text == "⭐ Отзывы клиентов")
-async def reviews_message(message: Message):
+def load_reviews():
+    with open("data/reviews.json", "r", encoding="utf-8") as file:
+        return json.load(file)
 
-    await message.answer(
-        "⭐ Отзывы наших клиентов\n\n"
-        "«Очень довольны уборкой! Всё аккуратно и быстро.»\n"
-        "— Анна, Москва\n\n"
-        "«Заказывали генеральную уборку после ремонта. "
-        "Результат отличный!»\n"
-        "— Михаил, Москва\n\n"
-        "«Приехали вовремя, всё сделали качественно. "
-        "Будем обращаться ещё.»\n"
-        "— Екатерина, Москва",
-        reply_markup=main_menu()
+REVIEWS_DIR = Path("data/reviews")
+
+async def show_review(message, index: int):
+    reviews = load_reviews()
+
+    if not reviews:
+        await message.answer(
+            "⭐ Пока нет отзывов."
+        )
+        return
+
+    index = index % len(reviews)
+
+    review = reviews[index]
+
+    photo_path = REVIEWS_DIR / review["photo"]
+
+    text = (
+        f"⭐ Отзыв {index + 1} из {len(reviews)}\n\n"
+        f"{review['text']}\n\n"
+        f"— {review['author']}"
     )
+
+    await message.answer_photo(
+        photo=FSInputFile(photo_path),
+        caption=text,
+        reply_markup=reviews_keyboard(index, len(reviews)))
